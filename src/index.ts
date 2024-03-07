@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import { CategoryRouter } from "./routes/category";
 import { CourseRouter } from "./routes/course";
 import { ModuleRouter } from "./routes/module";
+import { SectionRouter } from "./routes/section";
 dotenv.config();
 
 const app: Express = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(CategoryRouter)
 app.use(CourseRouter)
 app.use(ModuleRouter)
+app.use(SectionRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");

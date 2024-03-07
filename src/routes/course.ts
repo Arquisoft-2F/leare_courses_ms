@@ -76,7 +76,7 @@ CourseRouter.put("/courses/:id", async (req:Request, res: Response) =>{
 CourseRouter.delete("/courses/:id", async (req:Request, res: Response) =>{
     try{
         const course_id = req.params.id;
-        const response = await CourseService.deleteCourse(course_id)
+        await CourseService.deleteCourse(course_id)
         res.status(204)
         res.send()
     }catch(error:any){

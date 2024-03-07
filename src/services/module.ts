@@ -41,7 +41,7 @@ export const getModule = async (module_id: string):Promise<any> =>{
     return db.query(query,[module_id])
 }
 
-export const listModules = async (page:number): Promise<any> => {
+export const listModules = async (course_id:string,page:number): Promise<any> => {
     const rowsPerPage = 2;
     const query = `
     SELECT
@@ -49,21 +49,23 @@ export const listModules = async (page:number): Promise<any> => {
     m.module_name,
     m.course_id,
     m.pos_index AS module_pos_index,
-        CASE
-            WHEN count(s.section_id) = 0 THEN '[]'::json
-            ELSE json_agg(json_build_object(
-                'section_id', s.section_id,
-                'section_name', s.section_name,
-                'section_content', s.section_content,
-                'video_id', s.video_id,
-                'files_array', s.files_array,
-                'pos_index', s.pos_index
-            ))
-        END AS sections
+    CASE
+        WHEN count(s.section_id) = 0 THEN '[]'::json
+        ELSE json_agg(json_build_object(
+            'section_id', s.section_id,
+            'section_name', s.section_name,
+            'section_content', s.section_content,
+            'video_id', s.video_id,
+            'files_array', s.files_array,
+            'pos_index', s.pos_index
+        ))
+    END AS sections
     FROM
         Module m
     LEFT JOIN
         Section s ON m.module_id = s.module_id
+    WHERE
+        m.course_id = $3
     GROUP BY
         m.module_id,
         m.module_name,
@@ -74,9 +76,9 @@ export const listModules = async (page:number): Promise<any> => {
     LIMIT 
         $2
     OFFSET 
-        ($1 - 1) * $2; 
+        ($1 - 1) * $2;
     `
-    return db.query(query,[page, rowsPerPage])
+    return db.query(query,[page, rowsPerPage,course_id])
 }
 
 export const createModule = async (module_name:string,course_id:string,pos_index:number): Promise<any> => {

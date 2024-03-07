@@ -232,12 +232,20 @@ export const deleteCourse = async (course_id:string): Promise<any> => {
     //     DELETE FROM Course WHERE course_id = '${course_id}';
     // `
     try{
-        const query = `
-            DELETE FROM Course_Category WHERE course_id = $1;
-            DELETE FROM Module WHERE course_id = $2;
-            DELETE FROM Course WHERE course_id = $3;
-        `
-        return db.query(query,[course_id])
+        // const query = `
+        //     DELETE FROM Course_Category WHERE course_id = $1;
+        //     DELETE FROM Module WHERE course_id = $1;
+        //     DELETE FROM Course WHERE course_id = $1;
+        // `
+
+        const query1 = `DELETE FROM Course_Category WHERE course_id = $1`;
+        await db.query(query1, [course_id]);
+        const query2 = `DELETE FROM Module WHERE course_id = $1`;
+        await db.query(query2, [course_id]);
+        const query3 = `DELETE FROM Course WHERE course_id = $1`;
+        await db.query(query3, [course_id]);
+
+        // return db.query(query,[course_id])
     }catch(error){
         await db.query('ROLLBACK');
         throw error

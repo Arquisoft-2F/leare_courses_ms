@@ -1,14 +1,14 @@
 import express, { response } from "express";
 import type { Request, Response } from "express";
-import * as ModuleService from "../services/module"
+import * as SectionService from "../services/section"
 
-export const ModuleRouter = express.Router()
+export const SectionRouter = express.Router()
 
-ModuleRouter.get("/coursemodules/:course_id/:page", async (req:Request, res: Response) =>{
+SectionRouter.get("/modules/:module_id/sections/:page", async (req:Request, res: Response) =>{
     try{
-        const course_id = req.params.course_id
+        const module_id = req.params.module_id
         const page = parseInt(req.params.page)
-        const response = await ModuleService.listModules(course_id,page)
+        const response = await SectionService.listModuleSections(module_id,page)
         res.status(200)
         res.send(response.rows)
     }catch(error:any){
@@ -20,10 +20,10 @@ ModuleRouter.get("/coursemodules/:course_id/:page", async (req:Request, res: Res
     }
 })
 
-ModuleRouter.get("/modules/:id", async (req:Request, res: Response) =>{
+SectionRouter.get("/sections/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id
-        const response = await ModuleService.getModule(req.params.id)
+        const response = await SectionService.getSection(req.params.id)
         res.status(200)
         res.send(response.rows[0])
     }catch(error:any){
@@ -35,13 +35,17 @@ ModuleRouter.get("/modules/:id", async (req:Request, res: Response) =>{
     }
 })
 
-ModuleRouter.post("/modules", async (req:Request, res: Response) =>{
+SectionRouter.post("/sections", async (req:Request, res: Response) =>{
     try{
-        const module_name = req.body.module_name
-        const course_id = req.body.course_id
-        const pos_index = req.body.pos_index
         
-        await ModuleService.createModule(module_name,course_id,pos_index)
+        const module_id = req.body.module_id
+        const section_name = req.body.section_name
+        const section_content = req.body.section_content
+        const video_id = req.body.video_id
+        const files_array = req.body.files_array
+        const pos_index = req.body.pos_index
+
+        await SectionService.createSection(module_id, section_name, section_content, video_id, files_array, pos_index)
         // console.log(response)
         res.status(201)
         res.json({
@@ -56,11 +60,11 @@ ModuleRouter.post("/modules", async (req:Request, res: Response) =>{
     }
 })
 
-ModuleRouter.put("/modules/:id", async (req:Request, res: Response) =>{
+SectionRouter.put("/sections/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id;
-        const moduleEdit = req.body
-        const response = await ModuleService.editModule(id,moduleEdit)
+        const sectionEdit = req.body
+        const response = await SectionService.editSection(id,sectionEdit)
         res.status(200)
         res.json({
             "message": "edited successfully"
@@ -74,10 +78,10 @@ ModuleRouter.put("/modules/:id", async (req:Request, res: Response) =>{
     }
 })
 
-ModuleRouter.delete("/modules/:id", async (req:Request, res: Response) =>{
+SectionRouter.delete("/sections/:id", async (req:Request, res: Response) =>{
     try{
-        const module_id = req.params.id;
-        const response = await ModuleService.deleteModule(module_id)
+        const section_id = req.params.id;
+        const response = await SectionService.deleteSection(section_id)
         res.status(204)
         res.send()
     }catch(error:any){
