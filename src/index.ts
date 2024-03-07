@@ -1,6 +1,7 @@
 import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv";
 import { CategoryRouter } from "./routes/category";
+import { CourseRouter } from "./routes/course";
 dotenv.config();
 
 const app: Express = express();
@@ -8,6 +9,7 @@ const port = process.env.HTTP_PORT || 3000;
 
 app.use(express.json());
 app.use(CategoryRouter)
+app.use(CourseRouter)
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
