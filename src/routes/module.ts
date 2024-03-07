@@ -1,15 +1,17 @@
 import express, { response } from "express";
 import type { Request, Response } from "express";
-import * as CategoryService from "../services/category"
+import * as ModuleService from "../services/module"
 
-export const CategoryRouter = express.Router()
+export const ModuleRouter = express.Router()
 
-CategoryRouter.get("/categories", async (req:Request, res: Response) =>{
+ModuleRouter.get("/listmodules/:page", async (req:Request, res: Response) =>{
     try{
-        const response = await CategoryService.listCategories()
+        const page = parseInt(req.params.page)
+        const response = await ModuleService.listModules(page)
         res.status(200)
         res.send(response.rows)
     }catch(error:any){
+        console.log(error)
         res.status(500)
         res.json({
             "message": "error"
@@ -17,10 +19,10 @@ CategoryRouter.get("/categories", async (req:Request, res: Response) =>{
     }
 })
 
-CategoryRouter.get("/categories/:id", async (req:Request, res: Response) =>{
+ModuleRouter.get("/modules/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id
-        const response = await CategoryService.getCategory(req.params.id)
+        const response = await ModuleService.getModule(req.params.id)
         res.status(200)
         res.send(response.rows[0])
     }catch(error:any){
@@ -32,11 +34,13 @@ CategoryRouter.get("/categories/:id", async (req:Request, res: Response) =>{
     }
 })
 
-CategoryRouter.post("/categories", async (req:Request, res: Response) =>{
+ModuleRouter.post("/modules", async (req:Request, res: Response) =>{
     try{
-        const category_name = req.body.category_name;
-        // console.log(category_name)
-        const response = await CategoryService.createCategory(category_name)
+        const module_name = req.body.module_name
+        const course_id = req.body.course_id
+        const pos_index = req.body.pos_index
+        
+        await ModuleService.createModule(module_name,course_id,pos_index)
         // console.log(response)
         res.status(201)
         res.json({
@@ -51,11 +55,11 @@ CategoryRouter.post("/categories", async (req:Request, res: Response) =>{
     }
 })
 
-CategoryRouter.put("/categories/:id", async (req:Request, res: Response) =>{
+ModuleRouter.put("/modules/:id", async (req:Request, res: Response) =>{
     try{
-        const category_name = req.body.category_name;
-        const id = req.params.id
-        const response = await CategoryService.editCategory(id,category_name)
+        const id = req.params.id;
+        const moduleEdit = req.body
+        const response = await ModuleService.editModule(id,moduleEdit)
         res.status(200)
         res.json({
             "message": "edited successfully"
@@ -69,10 +73,10 @@ CategoryRouter.put("/categories/:id", async (req:Request, res: Response) =>{
     }
 })
 
-CategoryRouter.delete("/categories/:id", async (req:Request, res: Response) =>{
+ModuleRouter.delete("/modules/:id", async (req:Request, res: Response) =>{
     try{
-        const category_id = req.params.id;
-        const response = await CategoryService.deleteCategory(category_id)
+        const module_id = req.params.id;
+        const response = await ModuleService.deleteModule(module_id)
         res.status(204)
         res.send()
     }catch(error:any){

@@ -4,9 +4,10 @@ import * as CourseService from "../services/course"
 
 export const CourseRouter = express.Router()
 
-CourseRouter.get("/courses", async (req:Request, res: Response) =>{
+CourseRouter.get("/listcourses/:page", async (req:Request, res: Response) =>{
     try{
-        const response = await CourseService.listCourses()
+        const page = parseInt(req.params.page)
+        const response = await CourseService.listCourses(page)
         res.status(200)
         res.send(response.rows)
     }catch(error:any){
@@ -22,7 +23,7 @@ CourseRouter.get("/courses/:id", async (req:Request, res: Response) =>{
         const id = req.params.id
         const response = await CourseService.getCourse(req.params.id)
         res.status(200)
-        res.send(response.rows)
+        res.send(response.rows[0])
     }catch(error:any){
         res.status(500)
         console.log(error)

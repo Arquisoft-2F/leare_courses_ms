@@ -6,7 +6,10 @@ type Category = {
 }
 
 export const getCategory = async (category_id: string):Promise<any> =>{
-    return db.query(`SELECT * FROM Category WHERE category_id = '${category_id}'`)
+    const query = `
+        SELECT * FROM Category WHERE category_id = $1
+    `
+    return db.query(query,[category_id])
 }
 
 export const listCategories = async (): Promise<any> => {
@@ -15,7 +18,10 @@ export const listCategories = async (): Promise<any> => {
 
 export const createCategory = async (category_name:string): Promise<any> => {
     try{
-        return db.query(`INSERT INTO Category (category_name) VALUES ('${category_name}')`)
+        const query = `
+            INSERT INTO Category (category_name) VALUES ($1)
+        `
+        return db.query(query,[category_name])
     }catch(error){
         await db.query('ROLLBACK')
         throw error
@@ -25,7 +31,11 @@ export const createCategory = async (category_name:string): Promise<any> => {
 
 export const editCategory = async (category_id: string,category_name:string): Promise<any> => {
     try{
-        return db.query(`UPDATE Category SET category_name = '${category_name}' WHERE category_id = '${category_id}'`)
+        const query = `
+            UPDATE Category SET category_name = $1 WHERE category_id = $2
+        `
+        return db.query(query,[category_name,category_id])
+
     }catch(error){
         db.query('ROLLBACK')
         throw error
@@ -36,10 +46,10 @@ export const editCategory = async (category_id: string,category_name:string): Pr
 export const deleteCategory = async (category_id:string): Promise<any> => {
     try{
         const query = `
-            DELETE FROM Course_Category WHERE category_id = '${category_id}';
-            DELETE FROM Category WHERE category_id = '${category_id}';
+            DELETE FROM Course_Category WHERE category_id = $1;
+            DELETE FROM Category WHERE category_id = $1;
         `
-        return db.query(query)
+        return db.query(query,[category_id])
     }catch(error){
         db.query('ROLLBACK')
         throw error

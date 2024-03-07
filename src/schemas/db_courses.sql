@@ -3,9 +3,9 @@ CREATE TABLE Course (
   course_name text NOT NULL,
   course_description text,
   creator_id uuid NOT NULL,
-  public bool NOT NULL
-  picture_id uuid
-  created_at DATE DEFAULT CURRENT_DATE NOT NULL
+  public bool NOT NULL,
+  picture_id uuid,
+  created_at DATE DEFAULT CURRENT_DATE NOT NULL,
   updated_at DATE
 );
 
@@ -22,6 +22,8 @@ CREATE TABLE Section (
   video_id uuid,
   files_array text[], -- Changed array to text[]
   pos_index integer NOT NULL,
+  created_at DATE DEFAULT CURRENT_DATE NOT NULL,
+  updated_at DATE,
   UNIQUE(module_id, pos_index)
 );
 
@@ -30,6 +32,8 @@ CREATE TABLE Module (
   module_name text,
   course_id uuid,
   pos_index integer NOT NULL,
+  created_at DATE DEFAULT CURRENT_DATE NOT NULL,
+  updated_at DATE,
   UNIQUE(course_id, pos_index)
 );
 
@@ -44,9 +48,9 @@ ALTER TABLE Course_Category ADD FOREIGN KEY (category_id) REFERENCES Category (c
 
 ALTER TABLE Module ADD FOREIGN KEY (course_id) REFERENCES Course (course_id);
 
-ALTER TABLE Section ADD FOREIGN KEY (module_id) REFERENCES Module (module_id);
-
 ALTER TABLE Section 
 ADD CONSTRAINT fk_module_section FOREIGN KEY (module_id) 
 REFERENCES Module(module_id) 
 ON DELETE CASCADE;
+
+ALTER TABLE Section ADD FOREIGN KEY (module_id) REFERENCES Module (module_id);
