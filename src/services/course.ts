@@ -10,6 +10,37 @@ interface CourseUpdate {
     categories?: Array<string>;
 }
 
+export const coursesByCategory = async(categories:Array<string>):Promise<any> => {
+    const query = `
+    SELECT
+    c.course_id,
+    c.course_name,
+    c.course_description,
+    c.creator_id,
+    c.public,
+    c.picture_id,
+    c.created_at,
+    c.updated_at,
+    json_agg(json_build_object(
+        'category_id', cat.category_id,
+        'category_name', cat.category_name
+    )) AS categories
+    FROM
+        Course c
+    JOIN
+        Course_Category cc ON c.course_id = cc.course_id
+    JOIN
+        Category cat ON cc.category_id = cat.category_id
+    WHERE
+        cat.category_id = ANY($1) -- Use the ANY operator to match any element in the array
+    GROUP BY
+        c.course_id
+    ORDER BY
+        c.course_name; -- or any other desired sorting criteria
+    `
+    return db.query(query, [categories])
+}
+
 export const getCourse = async (course_id: string):Promise<any> =>{
     const query = `
     SELECT 

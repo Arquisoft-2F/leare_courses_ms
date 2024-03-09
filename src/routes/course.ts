@@ -4,6 +4,20 @@ import * as CourseService from "../services/course"
 
 export const CourseRouter = express.Router()
 
+CourseRouter.get("/courses/categories", async(req:Request, res: Response) => {
+    try{
+        const categories = req.body.categories
+        const response = await CourseService.coursesByCategory(categories)
+        res.status(200)
+        res.send(response.rows)
+    }catch(error){
+        res.status(500)
+        res.json({
+            "message": "error"
+        })
+    }
+})
+
 CourseRouter.get("/listcourses/:page", async (req:Request, res: Response) =>{
     try{
         const page = parseInt(req.params.page)
