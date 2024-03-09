@@ -15,7 +15,7 @@ if (!global.__db){
         user: process.env.DB_USER,
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
-        port: 5490 //toca modificar esto
+        port: parseInt(process.env.DB_PORT || "") // Parse the DB_PORT value as a number
     });
 }
 
