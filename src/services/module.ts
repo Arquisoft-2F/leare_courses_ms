@@ -87,9 +87,11 @@ export const createModule = async (module_name:string,course_id:string,pos_index
             INSERT INTO Module 
                 (module_name, course_id, pos_index, created_at, updated_at) 
             VALUES 
-                ($1,$2,$3,CURRENT_DATE,CURRENT_DATE) 
+                ($1,$2,$3,CURRENT_DATE,CURRENT_DATE)
+            RETURNING *
         `
         const result = await db.query(query,[module_name,course_id,pos_index]);
+        return result
         
     }catch(error){
         await db.query('ROLLBACK');
@@ -105,16 +107,18 @@ export const editModule = async (module_id: string, updates: ModuleUpdate): Prom
         const values = Object.values(updates);
         
 
-        if(setClause){
-            const updateCourseQuery = `
-                UPDATE Module
-                SET updated_at = CURRENT_DATE, ${setClause}
-                WHERE module_id = $1
-            `;
+        
+        const updateCourseQuery = `
+            UPDATE Module
+            SET updated_at = CURRENT_DATE, ${setClause}
+            WHERE module_id = $1
+            RETURNING *
+        `;
+        
+        const result = await db.query(updateCourseQuery, [module_id,...values]);
+        return result
             
-            await db.query(updateCourseQuery, [module_id,...values]);
-            
-        }
+        
     
     }catch(error){
         await db.query('ROLLBACK');

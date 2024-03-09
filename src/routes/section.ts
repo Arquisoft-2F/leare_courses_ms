@@ -24,8 +24,15 @@ SectionRouter.get("/sections/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id
         const response = await SectionService.getSection(req.params.id)
-        res.status(200)
-        res.send(response.rows[0])
+        if (!response.rows[0]){
+            res.status(404)
+            res.json({
+                "message": "not found"
+            })
+        }else{
+            res.status(200)
+            res.send(response.rows[0])
+        }
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -45,12 +52,13 @@ SectionRouter.post("/sections", async (req:Request, res: Response) =>{
         const files_array = req.body.files_array
         const pos_index = req.body.pos_index
 
-        await SectionService.createSection(module_id, section_name, section_content, video_id, files_array, pos_index)
+        const response = await SectionService.createSection(module_id, section_name, section_content, video_id, files_array, pos_index)
         // console.log(response)
         res.status(201)
-        res.json({
-            "message": "created successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "created successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -66,9 +74,10 @@ SectionRouter.put("/sections/:id", async (req:Request, res: Response) =>{
         const sectionEdit = req.body
         const response = await SectionService.editSection(id,sectionEdit)
         res.status(200)
-        res.json({
-            "message": "edited successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "edited successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)

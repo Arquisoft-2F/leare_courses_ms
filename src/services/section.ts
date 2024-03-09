@@ -36,8 +36,10 @@ export const createSection = async (module_id:string,section_name:string,section
                 (module_id, section_name, section_content, video_id, files_array, pos_index, created_at, updated_at) 
             VALUES 
                 ($1,$2,$3,$4,$5,$6,CURRENT_DATE,CURRENT_DATE) 
+            RETURNING *
         `
         const result = await db.query(query,[module_id, section_name, section_content, video_id, files_array, pos_index]);
+        return result
         
     }catch(error){
         await db.query('ROLLBACK');
@@ -51,16 +53,18 @@ export const editSection = async (section_id: string, updates: SectionUpdate): P
         const values = Object.values(updates);
         
 
-        if(setClause){
-            const updateCourseQuery = `
-                UPDATE Section
-                SET updated_at = CURRENT_DATE, ${setClause}
-                WHERE section_id = $1
-            `;
+        
+        const updateCourseQuery = `
+            UPDATE Section
+            SET updated_at = CURRENT_DATE, ${setClause}
+            WHERE section_id = $1
+            RETURNING *
+        `;
+        
+        const result = await db.query(updateCourseQuery, [section_id,...values]);
+        return result
             
-            await db.query(updateCourseQuery, [section_id,...values]);
-            
-        }
+        
     
     }catch(error){
         await db.query('ROLLBACK');

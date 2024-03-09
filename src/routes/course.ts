@@ -36,8 +36,17 @@ CourseRouter.get("/courses/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id
         const response = await CourseService.getCourse(req.params.id)
-        res.status(200)
-        res.send(response.rows[0])
+
+        if (!response.rows[0]){
+            res.status(404)
+            res.json({
+                "message": "not found"
+            })
+        }else{
+            res.status(200)
+            res.send(response.rows[0])
+        }
+
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -54,12 +63,13 @@ CourseRouter.post("/courses", async (req:Request, res: Response) =>{
         const creator_id = req.body.creator_id
         const picture_id = req.body.picture_id
         const categories = req.body.categories
-        await CourseService.createCourse(course_name,course_description,creator_id,picture_id,categories)
+        const response = await CourseService.createCourse(course_name,course_description,creator_id,picture_id,categories)
         // console.log(response)
         res.status(201)
-        res.json({
-            "message": "created successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "created successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -75,9 +85,10 @@ CourseRouter.put("/courses/:id", async (req:Request, res: Response) =>{
         const courseEdit = req.body
         const response = await CourseService.editCourse(id,courseEdit)
         res.status(200)
-        res.json({
-            "message": "edited successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "edited successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)

@@ -24,8 +24,15 @@ ModuleRouter.get("/modules/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id
         const response = await ModuleService.getModule(req.params.id)
-        res.status(200)
-        res.send(response.rows[0])
+        if (!response.rows[0]){
+            res.status(404)
+            res.json({
+                "message": "not found"
+            })
+        }else{
+            res.status(200)
+            res.send(response.rows[0])
+        }
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -41,12 +48,13 @@ ModuleRouter.post("/modules", async (req:Request, res: Response) =>{
         const course_id = req.body.course_id
         const pos_index = req.body.pos_index
         
-        await ModuleService.createModule(module_name,course_id,pos_index)
+        const response = await ModuleService.createModule(module_name,course_id,pos_index)
         // console.log(response)
         res.status(201)
-        res.json({
-            "message": "created successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "created successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -62,9 +70,10 @@ ModuleRouter.put("/modules/:id", async (req:Request, res: Response) =>{
         const moduleEdit = req.body
         const response = await ModuleService.editModule(id,moduleEdit)
         res.status(200)
-        res.json({
-            "message": "edited successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "edited successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)

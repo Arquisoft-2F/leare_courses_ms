@@ -189,7 +189,7 @@ export const createCourse = async (course_name:string,course_description:string,
                 (course_name, course_description, creator_id, public, picture_id, created_at, updated_at) 
             VALUES 
                 ($1,$2,$3,false,$4,CURRENT_DATE,CURRENT_DATE) 
-            RETURNING course_id
+            RETURNING *
         `
 
         const result = await db.query(query,[course_name,course_description,creator_id,picture_id]);
@@ -204,6 +204,8 @@ export const createCourse = async (course_name:string,course_description:string,
             `
             await db.query(query,[assignedId,category])
         });
+
+        return result
     }catch(error){
         await db.query('ROLLBACK');
         throw error
@@ -217,18 +219,17 @@ export const editCourse = async (course_id: string, updates: CourseUpdate): Prom
         const {categories, ...updateFields} = updates;
         const setClause = Object.keys(updateFields).map((key, index) => `${key} = $${index + 2}`).join(', ');
         const values = Object.values(updateFields);
-        
 
-        if(setClause){
-            const updateCourseQuery = `
-                UPDATE Course
-                SET updated_at = CURRENT_DATE, ${setClause}
-                WHERE course_id = $1
-            `;
+        const updateCourseQuery = `
+            UPDATE Course
+            SET updated_at = CURRENT_DATE, ${setClause}
+            WHERE course_id = $1
+            RETURNING *
+        `;
+        
+        const result = await db.query(updateCourseQuery, [course_id,...values]);
             
-            await db.query(updateCourseQuery, [course_id,...values]);
-            
-        }
+        
         if(categories && categories.length>0){
             
             const deleteQuery = `
@@ -243,6 +244,8 @@ export const editCourse = async (course_id: string, updates: CourseUpdate): Prom
             `;
             await db.query(insertQuery, [course_id, categories]);
         }
+
+        return result
     
     }catch(error){
         await db.query('ROLLBACK');

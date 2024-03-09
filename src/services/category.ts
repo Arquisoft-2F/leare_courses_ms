@@ -19,7 +19,7 @@ export const listCategories = async (): Promise<any> => {
 export const createCategory = async (category_name:string): Promise<any> => {
     try{
         const query = `
-            INSERT INTO Category (category_name) VALUES ($1)
+            INSERT INTO Category (category_name) VALUES ($1) RETURNING *
         `
         return db.query(query,[category_name])
     }catch(error){
@@ -32,7 +32,7 @@ export const createCategory = async (category_name:string): Promise<any> => {
 export const editCategory = async (category_id: string,category_name:string): Promise<any> => {
     try{
         const query = `
-            UPDATE Category SET category_name = $1 WHERE category_id = $2
+            UPDATE Category SET category_name = $1 WHERE category_id = $2 RETURNING *
         `
         return db.query(query,[category_name,category_id])
 

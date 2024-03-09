@@ -21,8 +21,17 @@ CategoryRouter.get("/categories/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id
         const response = await CategoryService.getCategory(req.params.id)
-        res.status(200)
-        res.send(response.rows[0])
+
+        if (!response.rows[0]){
+            res.status(404)
+            res.json({
+                "message": "not found"
+            })
+        }else{
+            res.status(200)
+            res.send(response.rows[0])
+        }
+        
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -39,9 +48,10 @@ CategoryRouter.post("/categories", async (req:Request, res: Response) =>{
         const response = await CategoryService.createCategory(category_name)
         // console.log(response)
         res.status(201)
-        res.json({
-            "message": "created successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "created successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)
@@ -57,9 +67,10 @@ CategoryRouter.put("/categories/:id", async (req:Request, res: Response) =>{
         const id = req.params.id
         const response = await CategoryService.editCategory(id,category_name)
         res.status(200)
-        res.json({
-            "message": "edited successfully"
-        })
+        res.send(response.rows[0])
+        // res.json({
+        //     "message": "edited successfully"
+        // })
     }catch(error:any){
         res.status(500)
         console.log(error)
