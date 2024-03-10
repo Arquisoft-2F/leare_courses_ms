@@ -6,6 +6,7 @@ import { CourseRouter } from "./routes/course";
 import { ModuleRouter } from "./routes/module";
 import { SectionRouter } from "./routes/section";
 dotenv.config();
+//la buena
 
 const app: Express = express();
 const port = process.env.HTTP_PORT || 3000;
