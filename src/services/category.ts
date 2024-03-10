@@ -45,11 +45,16 @@ export const editCategory = async (category_id: string,category_name:string): Pr
 
 export const deleteCategory = async (category_id:string): Promise<any> => {
     try{
-        const query = `
+        const query1 = `
             DELETE FROM Course_Category WHERE category_id = $1;
+            
+        `
+        await db.query(query1, [category_id])
+        const query2 = `
             DELETE FROM Category WHERE category_id = $1;
         `
-        return db.query(query,[category_id])
+        await db.query(query2, [category_id])
+
     }catch(error){
         db.query('ROLLBACK')
         throw error
