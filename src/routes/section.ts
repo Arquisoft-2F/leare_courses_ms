@@ -68,7 +68,7 @@ SectionRouter.post("/sections", async (req:Request, res: Response) =>{
     }
 })
 
-SectionRouter.put("/sections/:id", async (req:Request, res: Response) =>{
+SectionRouter.patch("/sections/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id;
         const sectionEdit = req.body

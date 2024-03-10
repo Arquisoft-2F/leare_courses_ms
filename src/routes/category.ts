@@ -61,7 +61,7 @@ CategoryRouter.post("/categories", async (req:Request, res: Response) =>{
     }
 })
 
-CategoryRouter.put("/categories/:id", async (req:Request, res: Response) =>{
+CategoryRouter.patch("/categories/:id", async (req:Request, res: Response) =>{
     try{
         const category_name = req.body.category_name;
         const id = req.params.id

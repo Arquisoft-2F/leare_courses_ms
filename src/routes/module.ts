@@ -64,7 +64,7 @@ ModuleRouter.post("/modules", async (req:Request, res: Response) =>{
     }
 })
 
-ModuleRouter.put("/modules/:id", async (req:Request, res: Response) =>{
+ModuleRouter.patch("/modules/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id;
         const moduleEdit = req.body

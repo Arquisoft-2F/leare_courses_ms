@@ -79,7 +79,7 @@ CourseRouter.post("/courses", async (req:Request, res: Response) =>{
     }
 })
 
-CourseRouter.put("/courses/:id", async (req:Request, res: Response) =>{
+CourseRouter.patch("/courses/:id", async (req:Request, res: Response) =>{
     try{
         const id = req.params.id;
         const courseEdit = req.body
