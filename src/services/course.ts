@@ -219,17 +219,20 @@ export const editCourse = async (course_id: string, updates: CourseUpdate): Prom
         const {categories, ...updateFields} = updates;
         const setClause = Object.keys(updateFields).map((key, index) => `${key} = $${index + 2}`).join(', ');
         const values = Object.values(updateFields);
+        let result: any = null;
 
-        const updateCourseQuery = `
+        if(setClause){
+            const updateCourseQuery = `
             UPDATE Course
             SET updated_at = CURRENT_DATE, ${setClause}
             WHERE course_id = $1
             RETURNING *
-        `;
+            `;
         
-        const result = await db.query(updateCourseQuery, [course_id,...values]);
+            result = await db.query(updateCourseQuery, [course_id,...values]);
+        }
+        
             
-        
         if(categories && categories.length>0){
             
             const deleteQuery = `
@@ -243,6 +246,8 @@ export const editCourse = async (course_id: string, updates: CourseUpdate): Prom
                 VALUES ($1, unnest($2::uuid[]))
             `;
             await db.query(insertQuery, [course_id, categories]);
+
+            result = await db.query(`SELECT * FROM Course WHERE course_id = $1`,[course_id])
         }
 
         return result
