@@ -1,0 +1,20 @@
+version: '3'
+services:
+  courses_db:
+    image: postgres:16.2-alpine
+    volumes:
+      - ../db/leare_courses_db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5490:5490"
+
+#docker exec leare_users_ms-users_web-1 rails db:migrate
+  users_web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3003:3003"
+    depends_on:
+      - courses_db

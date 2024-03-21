@@ -9,7 +9,7 @@ dotenv.config();
 
 
 const app: Express = express();
-const port = process.env.HTTP_PORT || 3000;
+const port = process.env.HTTP_PORT || 3003;
 
 app.use(express.json());
 app.use(morgan('dev'))
