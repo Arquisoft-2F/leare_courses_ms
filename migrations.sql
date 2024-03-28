@@ -16,7 +16,7 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE leare_courses_db;
+DROP DATABASE IF EXISTS leare_courses_db;
 --
 -- Name: leare_courses_db; Type: DATABASE; Schema: -; Owner: postgres
 --
