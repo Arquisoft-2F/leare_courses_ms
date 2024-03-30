@@ -87,8 +87,10 @@ ModuleRouter.delete("/modules/:id", async (req:Request, res: Response) =>{
     try{
         const module_id = req.params.id;
         const response = await ModuleService.deleteModule(module_id)
-        res.status(204)
-        res.send()
+        res.status(200)
+        res.json({
+            "message":"deleted successfully"
+        })
     }catch(error:any){
         res.status(500)
         console.log(error)

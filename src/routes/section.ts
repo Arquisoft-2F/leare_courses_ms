@@ -91,8 +91,10 @@ SectionRouter.delete("/sections/:id", async (req:Request, res: Response) =>{
     try{
         const section_id = req.params.id;
         const response = await SectionService.deleteSection(section_id)
-        res.status(204)
-        res.send()
+        res.status(200)
+        res.json({
+            "message":"deleted successfully"
+        })
     }catch(error:any){
         res.status(500)
         console.log(error)

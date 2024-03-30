@@ -102,8 +102,10 @@ CourseRouter.delete("/courses/:id", async (req:Request, res: Response) =>{
     try{
         const course_id = req.params.id;
         await CourseService.deleteCourse(course_id)
-        res.status(204)
-        res.send()
+        res.status(200)
+        res.json({
+            "message":"deleted successfully"
+        })
     }catch(error:any){
         res.status(500)
         console.log(error)
