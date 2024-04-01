@@ -19,7 +19,7 @@ CourseRouter.get("/sections/:id/creator", async(req:Request, res: Response) => {
                 "error":"no existe una seccion con el id especificado"
             })
         }
-        // res.send(response.rows[0])
+        
     }catch(error){
         console.log(error)
         res.status(500)
@@ -87,10 +87,19 @@ CourseRouter.get("/courses/:id/files", async(req:Request, res: Response) => {
     try{
         const id = req.params.id
         const response = await CourseService.getCourseFiles(id)
-        
-        res.status(200)
-        res.send(response.rows[0])
-        
+        console.log(response.rows[0].all_files)
+
+        if(response.rows[0].all_files == null){
+            res.status(404)
+            res.json({
+                "message": "error obteniendo el arreglo de archivos",
+                "error":"no existe un curso con el id especificado"
+            })
+        }else{
+            res.status(200)
+            res.send(response.rows[0])
+        }
+
     }catch(error){
         console.log(error)
         res.status(500)
@@ -111,7 +120,8 @@ CourseRouter.get("/courses/categories", async(req:Request, res: Response) => {
     }catch(error){
         res.status(500)
         res.json({
-            "message": "error"
+            "message": "error obteniendo cursos por categoria",
+            "error": error
         })
     }
 })
@@ -125,7 +135,8 @@ CourseRouter.get("/listcourses/:page", async (req:Request, res: Response) =>{
     }catch(error:any){
         res.status(500)
         res.json({
-            "message": "error"
+            "message": "error obteniendo cursos",
+            "error": error
         })
     }
 })
@@ -149,7 +160,8 @@ CourseRouter.get("/courses/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error obteniendo curso por id",
+            "error": error
         })
     }
 })
@@ -172,7 +184,8 @@ CourseRouter.post("/courses", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error creando curso",
+            "error": error
         })
     }
 })
@@ -191,7 +204,8 @@ CourseRouter.patch("/courses/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error editando curso",
+            "error": error
         })
     }
 })
@@ -208,7 +222,8 @@ CourseRouter.delete("/courses/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error eliminando curso",
+            "error": error
         })
     }
 })

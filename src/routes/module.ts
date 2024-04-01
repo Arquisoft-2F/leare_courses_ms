@@ -15,7 +15,8 @@ ModuleRouter.get("/coursemodules/:course_id/:page", async (req:Request, res: Res
         console.log(error)
         res.status(500)
         res.json({
-            "message": "error"
+            "message": "error obteniendo modulos de curso",
+            "error": error
         })
     }
 })
@@ -37,7 +38,8 @@ ModuleRouter.get("/modules/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error obteniendo modulo por id",
+            "error": error
         })
     }
 })
@@ -59,7 +61,8 @@ ModuleRouter.post("/modules", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error creando modulo",
+            "error": error
         })
     }
 })
@@ -78,7 +81,8 @@ ModuleRouter.patch("/modules/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error editando modulo",
+            "error": error
         })
     }
 })
@@ -95,7 +99,8 @@ ModuleRouter.delete("/modules/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error eliminando modulo",
+            "error": error
         })
     }
 })

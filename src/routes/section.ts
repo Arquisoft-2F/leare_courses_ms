@@ -15,7 +15,8 @@ SectionRouter.get("/modules/:module_id/sections/:page", async (req:Request, res:
         console.log(error)
         res.status(500)
         res.json({
-            "message": "error"
+            "message": "error obteniendo secciones de modulo",
+            "error": error
         })
     }
 })
@@ -37,7 +38,8 @@ SectionRouter.get("/sections/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error obteniendo seccion",
+            "error": error
         })
     }
 })
@@ -63,7 +65,8 @@ SectionRouter.post("/sections", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error creando seccion",
+            "error": error
         })
     }
 })
@@ -82,7 +85,8 @@ SectionRouter.patch("/sections/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error editando seccion",
+            "error": error
         })
     }
 })
@@ -99,7 +103,8 @@ SectionRouter.delete("/sections/:id", async (req:Request, res: Response) =>{
         res.status(500)
         console.log(error)
         res.json({
-            "message": "error"
+            "message": "error eliminando seccion",
+            "error": error
         })
     }
 })
