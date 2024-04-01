@@ -10,6 +10,43 @@ interface CourseUpdate {
     categories?: Array<string>;
 }
 
+export const getModuleFiles = async(module_id : string):Promise<any> => {
+    const query = `
+    SELECT CASE 
+         WHEN COUNT(subquery.section_id) > 0 THEN array_agg(subquery.elements) 
+         ELSE '{}' 
+       END AS all_files
+    FROM (
+        SELECT s.section_id, unnest(COALESCE(s.files_array, '{}') || ARRAY[CAST(s.video_id AS TEXT)]) AS elements
+        FROM module m
+        LEFT JOIN section s ON m.module_id = s.module_id
+        WHERE m.module_id = $1
+    ) AS subquery;
+    `
+    return db.query(query, [module_id])
+}
+
+export const getCourseFiles = async(course_id : string):Promise<any> => {
+    const query = `
+    SELECT array_agg(elements) AS all_files
+    FROM (
+        SELECT CAST(c.picture_id AS TEXT) AS elements
+        FROM course c
+        WHERE c.course_id = $1
+        
+        UNION ALL
+        
+        SELECT unnest(array[CAST(s.video_id AS TEXT)] || COALESCE(s.files_array, '{}')) AS elements
+        FROM course c
+        JOIN module m ON c.course_id = m.course_id
+        JOIN section s ON m.module_id = s.module_id
+        WHERE c.course_id = $1
+    ) AS combined
+    WHERE elements IS NOT NULL;
+    `
+    return db.query(query, [course_id])
+}
+
 export const coursesByCategory = async(categories:Array<string>):Promise<any> => {
     const query = `
     SELECT

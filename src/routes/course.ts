@@ -4,6 +4,39 @@ import * as CourseService from "../services/course"
 
 export const CourseRouter = express.Router()
 
+CourseRouter.get("/modules/:id/files", async(req:Request, res: Response) => {
+    try{
+        const id = req.params.id
+        const response = await CourseService.getModuleFiles(id)
+        res.status(200)
+        res.send(response.rows[0])
+    }catch(error){
+        console.log(error)
+        res.status(500)
+        res.json({
+            "message": "error",
+            "error":error
+        })
+    }
+})
+
+CourseRouter.get("/courses/:id/files", async(req:Request, res: Response) => {
+    try{
+        const id = req.params.id
+        const response = await CourseService.getCourseFiles(id)
+        res.status(200)
+        res.send(response.rows[0])
+    }catch(error){
+        console.log(error)
+        res.status(500)
+        res.json({
+            "message": "error",
+            "error":error
+        })
+    }
+})
+
+
 CourseRouter.get("/courses/categories", async(req:Request, res: Response) => {
     try{
         const categories = req.body.categories
