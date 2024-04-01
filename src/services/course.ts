@@ -10,6 +10,27 @@ interface CourseUpdate {
     categories?: Array<string>;
 }
 
+export const getCreatorFromSection = async(section_id : string):Promise<any> => {
+    const query = `
+        SELECT c.creator_id
+        FROM section s
+        JOIN module m ON s.module_id = m.module_id
+        JOIN course c ON m.course_id = c.course_id
+        WHERE s.section_id = $1;
+    `
+    return db.query(query, [section_id])
+}
+
+export const getCreatorFromModule = async(module_id : string):Promise<any> => {
+    const query = `
+        SELECT c.creator_id
+        FROM module m
+        JOIN course c ON m.course_id = c.course_id
+        WHERE m.module_id = $1;
+    `
+    return db.query(query, [module_id])
+}
+
 export const getModuleFiles = async(module_id : string):Promise<any> => {
     const query = `
     SELECT CASE 

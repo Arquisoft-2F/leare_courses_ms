@@ -4,17 +4,80 @@ import * as CourseService from "../services/course"
 
 export const CourseRouter = express.Router()
 
-CourseRouter.get("/modules/:id/files", async(req:Request, res: Response) => {
+CourseRouter.get("/sections/:id/creator", async(req:Request, res: Response) => {
     try{
         const id = req.params.id
-        const response = await CourseService.getModuleFiles(id)
-        res.status(200)
-        res.send(response.rows[0])
+        const response = await CourseService.getCreatorFromSection(id)
+        
+        if(response.rows.length > 0){
+            res.status(200)
+            res.send(response.rows[0])
+        }else{
+            res.status(404)
+            res.json({
+                "message": "error",
+                "error":"no existe una seccion con el id especificado"
+            })
+        }
+        // res.send(response.rows[0])
     }catch(error){
         console.log(error)
         res.status(500)
         res.json({
-            "message": "error",
+            "message": "error obteniendo el creador del curso",
+            "error":error
+        })
+    }
+})
+
+CourseRouter.get("/modules/:id/creator", async(req:Request, res: Response) => {
+    try{
+        const id = req.params.id
+        const response = await CourseService.getCreatorFromModule(id)
+        
+        if(response.rows.length > 0){
+            res.status(200)
+            res.send(response.rows[0])
+        }else{
+            res.status(404)
+            res.json({
+                "message": "error",
+                "error":"no existe un modulo con el id especificado"
+            })
+        }
+        
+    }catch(error){
+        console.log(error)
+        res.status(500)
+        res.json({
+            "message": "error obteniendo el creador del curso",
+            "error":error
+        })
+    }
+})
+
+CourseRouter.get("/modules/:id/files", async(req:Request, res: Response) => {
+    try{
+        const id = req.params.id
+        const response = await CourseService.getModuleFiles(id)
+        
+        
+        if(response.rows[0].all_files.length > 0){
+            res.status(200)
+            res.send(response.rows[0])
+        }else{
+            res.status(404)
+            res.json({
+                "message": "error obteniendo el arreglo de archivos",
+                "error":"no existe un modulo con el id especificado"
+            })
+        }
+
+    }catch(error){
+        console.log(error)
+        res.status(500)
+        res.json({
+            "message": "error obteniendo el arreglo de archivos",
             "error":error
         })
     }
@@ -24,8 +87,10 @@ CourseRouter.get("/courses/:id/files", async(req:Request, res: Response) => {
     try{
         const id = req.params.id
         const response = await CourseService.getCourseFiles(id)
+        
         res.status(200)
         res.send(response.rows[0])
+        
     }catch(error){
         console.log(error)
         res.status(500)
