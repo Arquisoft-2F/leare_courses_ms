@@ -171,9 +171,10 @@ CourseRouter.post("/courses", async (req:Request, res: Response) =>{
         const course_name = req.body.course_name
         const course_description = req.body.course_description
         const creator_id = req.body.creator_id
+        const chat_id = req.body.chat_id
         const picture_id = req.body.picture_id
         const categories = req.body.categories
-        const response = await CourseService.createCourse(course_name,course_description,creator_id,picture_id,categories)
+        const response = await CourseService.createCourse(course_name,course_description,creator_id,chat_id,picture_id,categories)
         // console.log(response)
         res.status(201)
         res.send(response.rows[0])

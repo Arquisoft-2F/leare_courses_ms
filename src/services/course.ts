@@ -75,6 +75,7 @@ export const coursesByCategory = async(categories:Array<string>):Promise<any> =>
     c.course_name,
     c.course_description,
     c.creator_id,
+    c.chat_id,
     c.public,
     c.picture_id,
     c.created_at,
@@ -106,6 +107,7 @@ export const getCourse = async (course_id: string):Promise<any> =>{
         c.course_name,
         c.course_description,
         c.creator_id,
+        c.chat_id,
         c.public,
         c.picture_id,
         c.created_at,
@@ -175,6 +177,7 @@ export const listCourses = async (page:number): Promise<any> => {
     c.course_name,
     c.course_description,
     c.creator_id,
+    c.chat_id,
     c.public,
     c.picture_id,
     c.created_at,
@@ -240,17 +243,17 @@ export const listCourses = async (page:number): Promise<any> => {
     return db.query(query,[page,rowsPerPage])
 }
 
-export const createCourse = async (course_name:string,course_description:string,creator_id:string,picture_id:string, categories:Array<string>): Promise<any> => {
+export const createCourse = async (course_name:string,course_description:string,creator_id:string,chat_id:string,picture_id:string, categories:Array<string>): Promise<any> => {
     try{
         const query = `
             INSERT INTO Course 
-                (course_name, course_description, creator_id, public, picture_id, created_at, updated_at) 
+                (course_name, course_description, creator_id,chat_id, public, picture_id, created_at, updated_at) 
             VALUES 
-                ($1,$2,$3,false,$4,CURRENT_DATE,CURRENT_DATE) 
+                ($1,$2,$3,$4,false,$5,CURRENT_DATE,CURRENT_DATE) 
             RETURNING *
         `
 
-        const result = await db.query(query,[course_name,course_description,creator_id,picture_id]);
+        const result = await db.query(query,[course_name,course_description,creator_id,chat_id,picture_id]);
         const assignedId = result.rows[0].course_id;
 
         categories.forEach(async category => {
